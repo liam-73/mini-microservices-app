@@ -3,7 +3,7 @@ const cors = require('cors');
 const axios = require('axios');
 const { randomBytes } = require('crypto');
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 4000;
 
 const app = express();
 
@@ -23,7 +23,7 @@ app.post('/posts', async (req, res) => {
 
   posts[id] = { id, title };
 
-  await axios.post('http://localhost:4040/events', {
+  await axios.post('http://localhost:4002/events', {
     type: 'PostCreated',
     data: { id, title },
   });

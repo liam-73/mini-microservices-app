@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 
-const port = process.env.PORT || 4040;
+const port = process.env.PORT || 4002;
 
 const app = express();
 
@@ -11,14 +11,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => res.send('hola from event bus'));
 
+const events = [];
+
 app.post('/events', (req, res) => {
   const event = req.body;
 
-  axios.post('http://localhost:8080/events', event);
-  axios.post('http://localhost:4000/events', event);
-  axios.post('http://localhost:4001/events', event);
+  events.push(event);
+
+  axios
+    .post('http://localhost:4000/events', event)
+    .catch((e) => console.log(e.message));
+  axios
+    .post('http://localhost:4001/events', event)
+    .catch((e) => console.log(e.message));
+  axios
+    .post('http://localhost:4003/events', event)
+    .catch((e) => console.log(e.message));
+  axios
+    .post('http://localhost:4004/events', event)
+    .catch((e) => console.log(e.message));
 
   res.send({ status: 'OK' });
+});
+
+app.get('/events', (req, res) => {
+  res.send(events);
 });
 
 app.listen(port, () => console.log('listening on port ', port));
